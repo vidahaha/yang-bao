@@ -12,14 +12,23 @@
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                             <i class="iconfont icon-3801wenjian" @click="$refs.file.click()"></i>
                             <i title="邀请专家" class="iconfont icon-icon_users my_inviation" @click="invite()"></i>
-                            <el-dropdown placement="top" @command="addExpression">
-                                <span class="el-dropdown-link">
-                                    常用语
-                                </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="(item, index) in expressionList" :command="item.label" :key="index">{{ item.label }}</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
+                            <el-select
+                                v-model="currentExpression"
+                                filterable
+                                allow-create
+                                default-first-option
+                                clearable
+                                placeholder="常用语"
+                                @change="addExpression"
+                                >
+                                <el-option
+                                v-for="(item, index) in expressionList"
+                                :key="index"
+                                :label="item.label"
+                                :value="item.label"
+                                >
+                                </el-option>
+                            </el-select>
                         </div>
                         <vue-emoji
                             v-show='showEmoji'
@@ -61,7 +70,7 @@
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
-import { getExpert, getUserById, getExpressions, getClients, getTalkRecord } from '@/util/getdata'
+import { getExpert, getUserById, postExpressions, getExpressions, getClients, getTalkRecord } from '@/util/getdata'
 import { wsUrl, baseUrl, tokenStr, authStr } from '@/util/fetch'
 
 export default {
@@ -80,7 +89,8 @@ export default {
 
             options: [],
             filterUser: '',
-            // 满足王老师的常用语需求！！！
+            
+            currentExpression: '',
             expressionList: [],
             userList: [
                 {label: '所有用户', children: []}
@@ -107,7 +117,7 @@ export default {
             }
         }).then(_ => {
             // TODO: this.expert.id 根据专家 ID 获取常用语列表
-            getExpressions(2).then(res => {
+            getExpressions(this.expert.id).then(res => {
                 if (isReqSuccessful(res)) {
                     let arr = []
                     res.data.List.forEach(v => {
@@ -224,6 +234,30 @@ export default {
         // TODO: 添加常用语插入光标所在位置
         // 添加常用语
         addExpression (expression) {
+            if ( expression === "" ) return false 
+            if ( !this.expressionList.some(val =>  val.label === expression) ) {
+                postExpressions({
+                    expert_id: this.expert.id,
+                    expression
+                }).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message('成功添加常用语')
+                        getExpressions(this.expert.id).then(res => {
+                            if (isReqSuccessful(res)) {
+                                let arr = []
+                                res.data.List.forEach(v => {
+                                    arr.push({label: v.expression})
+                                })
+                                this.expressionList = arr
+                            }
+                        })
+                    } else {
+                        this.$message('添加失败')
+                    }
+                }).catch(res => {
+                    this.$message('添加失败')
+                });
+            }
             this.$refs.edit.innerHTML += expression
         },
 
@@ -410,7 +444,7 @@ export default {
                     margin-right 5px
                     font-size 20px
                     cursor pointer
-                .el-dropdown-link
+                el-select
                     padding 3px 5px
                     border-radius 3px
                     font-size 13px

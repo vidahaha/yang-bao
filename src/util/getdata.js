@@ -71,6 +71,8 @@ export const getClients = proid => fetch('/getClientList/' + proid)
 // 获取所有聊天记录 用户传id 专家传talkid
 export const getTalkRecord = id => fetch('/getTalkRecord/' + id)
 
+// 保存常用语
+export const postExpressions = data => fetch('/expression', data, 'POST')
 // 获取常用语
 export const getExpressions = expertid => fetch('/getExpression?expert_id=' + expertid)
 
