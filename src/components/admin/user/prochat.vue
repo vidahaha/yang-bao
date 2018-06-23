@@ -27,8 +27,11 @@
                                 :label="item.label"
                                 :value="item.label"
                                 >
+                                <span>{{ item.label }}</span>
+                                <i class="el-icon-delete" style="font-size:18px" @click.stop="deleteExpression(index)"></i>
                                 </el-option>
                             </el-select>
+                            <el-button size="small" type="primary">聊天记录</el-button>
                         </div>
                         <vue-emoji
                             v-show='showEmoji'
@@ -234,7 +237,10 @@ export default {
         // TODO: 添加常用语插入光标所在位置
         // 添加常用语
         addExpression (expression) {
-            if ( expression === "" ) return false 
+            if ( expression.length <= 1 || expression.length > 20 ) {
+                this.$message('常用语长度应保持在2--20以内')
+                return false 
+            }
             if ( !this.expressionList.some(val =>  val.label === expression) ) {
                 postExpressions({
                     expert_id: this.expert.id,
@@ -259,6 +265,10 @@ export default {
                 });
             }
             this.$refs.edit.innerHTML += expression
+        },
+
+        deleteExpression (index) {
+            console.log( index )
         },
 
         send (e) {
@@ -361,6 +371,11 @@ export default {
 
 <style lang="stylus">
 @import '../../../assets/css/color'
+
+.el-select-dropdown__item
+    display flex
+    justify-content space-between
+    align-items center
 
 .pro_wrapper
     padding 10px 0

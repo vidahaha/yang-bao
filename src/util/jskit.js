@@ -83,8 +83,8 @@ export const checkForm = (form, checkFull) => {
 
     let checkTrade = (data) => {
         return data.every(val => {
-            if (val.model !== undefined && !/^[G|M]\d{5}$/.test(val.model)) {
-                app.$message.warning(val.name + '必须是G或M加上5位数字')
+            if (val.model !== undefined && !/^[G|M]\d{6}$/.test(val.model)) {
+                app.$message.warning(val.name + '必须是G或M加上6位数字')
                 return false
             } else {
                 return true
@@ -142,7 +142,7 @@ export const checkForm = (form, checkFull) => {
         app.$message.warning(val)
         return false
     }
-    if (checkFull && Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
+    if (checkFull && Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark' && v !== 'nativeEartag')) {
         app.$message.warning('请完善表单信息')
         return false
     }

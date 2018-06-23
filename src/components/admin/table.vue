@@ -27,6 +27,7 @@
                 align="right">
             </el-date-picker>
             <el-button @click="fetchData()" size="small" type="primary">查询</el-button>
+            <el-button @click="export2xls()" size="small" type="primary" icon="el-icon-download">导出表格</el-button>
         </div>
         <el-table
             v-loading="load"
@@ -94,7 +95,8 @@
             <el-table-column
                 width="150"
                 align='center'
-                prop="unpassReason"
+                v-if="hasUnpass"
+                prop="upassReason"
                 label="审核拒绝原因">
             </el-table-column>
             <el-table-column
@@ -138,6 +140,7 @@
 </template>
 
 <script>
+import XLSX from 'xlsx'
 import { isReqSuccessful } from '@/util/jskit'
 import { getUserById, getReleaseByName } from '@/util/getdata'
 import {
@@ -240,12 +243,17 @@ export default {
         hasCommonHeader: {
             type: Boolean,
             default: false
+        },
+        // 是否有审核拒绝原因
+        hasUnpass: {
+            type: Boolean,
+            default: true
         }
     },
 
     watch: {
         checkModule (newM) {
-            this.isProName = ['prevention', 'nutrition/stage', 'nutrition/breed'].includes(newM)
+            this.isProName = ['prevention', 'nutrition/stage', 'welfare', 'nutrition/breed'].includes(newM)
         },
 
         getData (newV) {
@@ -254,6 +262,7 @@ export default {
     },
 
     mounted () {
+        this.isProName = ['prevention', 'nutrition/stage', 'welfare', 'nutrition/breed'].includes(this.modpath)
         let id = this.$route.params.id
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
@@ -287,6 +296,78 @@ export default {
     },
 
     methods: {
+        // 导出表格数据为 xls 表单并自动下载
+        export2xls () {
+            if (!this.tableData.length) {
+                this.$message.warning('表格数据为空')
+            }
+
+            let s2ab = s => {
+                if (typeof ArrayBuffer !== 'undefined') {
+                    var buf = new ArrayBuffer(s.length)
+                    var view = new Uint8Array(buf)
+                    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF
+                    return buf
+                } else {
+                    var buf = new Array(s.length)
+                    for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF
+                    return buf
+                }
+            }
+
+            let eBody = this.tableData.slice(0)
+            eBody.forEach(v => {
+                Object.keys(v).forEach(vk => {
+                    let inTable = false
+                    // 有的表头含有 children ，要特殊处理
+                    this.headers.forEach(vh => {
+                        if (vh.children) {
+                            inTable = vh.children.find(v => v.prop === vk)
+                        }
+                    })
+
+                    if (!inTable) {
+                        inTable = this.headers.find(v => v.prop === vk)
+                    }
+                    if (inTable && inTable.label) {
+                        v[inTable.label] = v[vk]
+                    }
+
+                    // this.header 不含有一些公共表头如养殖场 factoryName 等，在这里手动加入
+                    if (!['ispassCheck', 'factoryName', 'gmtCreate', 'remark', 'ispassSup', 'operatorName', 'professorName', 'upassReason', 'supervisorName'].includes(vk)) {
+                        delete v[vk]
+                    } else {
+                        let map = {
+                            ispassCheck: '审核状态',
+                            factoryName: '养殖场',
+                            gmtCreate: '提交时间',
+                            remark: '备注',
+                            ispassSup: '监督执行状态',
+                            operatorName: '操作人员',
+                            professorName: '技术审核',
+                            upassReason: '审核拒绝原因',
+                            supervisorName: '监督执行'
+                        }
+                        v[map[vk]] = v[vk]
+                        delete v[vk]
+                    }
+                })
+            })
+            // console.log(eBody)
+            const wb = { SheetNames: ['Sheet1'], Sheets: {}, Props: {} }
+            const wopts = { bookType: 'biff8', bookSST: false, type: 'binary' }
+            wb.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(eBody)
+
+            let tmpa = document.createElement("a");
+            let obj = new Blob([s2ab(XLSX.write(wb, wopts))], { type: 'application/octet-stream' })
+            tmpa.download = '下载.xls'
+            tmpa.href = URL.createObjectURL(obj) //绑定a标签
+            tmpa.click() //模拟点击实现下载
+            setTimeout(function () { //延时释放
+                URL.revokeObjectURL(obj) //用URL.revokeObjectURL()来释放这个object URL
+            }, 100)
+        },
+
         async Spv (isPass, idx) {
             try {
                 let result
@@ -326,7 +407,7 @@ export default {
 
                 // userRole 20羊场监督员
                 if (this.user.userRole == 20) {
-                    if (ispassSup !== '未检查') {
+                    if (ispassSup === '执行') {
                         this.$message.warning('该条记录已检查')
                         return
                     }
@@ -338,8 +419,8 @@ export default {
                         if (isReqSuccessful(res)) {
                             this.$message.success('监督执行成功')
                             this.tableData[idx].ispassSup = isPass ? '已执行' : '未执行'
-                            this.tableData[idx].supervisor = this.user.userRealname
-                            this.tableData[idx].supervisorName = this.user.userRealname
+                            this.$set(this.tableData[idx], 'supervisor', this.user.userRealname)
+                            this.$set(this.tableData[idx], 'supervisorName', this.user.userRealname)
                         }
                     }, _ => {
                         this.$message.error('监督执行失败')
@@ -359,7 +440,7 @@ export default {
                             this.tableData[idx].professor = this.user.userRealname
                             this.tableData[idx].professorName = this.user.userRealname
                             if (isPass === 0) {
-                                this.tableData[idx].unpassReason = unpassReason
+                                this.$set(this.tableData[idx], 'upassReason', unpassReason)
                             }
                         }
                     }, _ => {
@@ -408,6 +489,14 @@ export default {
                 this.getData(pathid, param).then(res => {
                     if (isReqSuccessful(res)) {
                         let data = res.data
+
+                        // 是否配种产子页面
+                        if (this.checkModule === 'nutrition/breed') {
+                            data.List.forEach(v => {
+                                v.upassReason = v.professorNotPassReason
+                                delete v.professorNotPassReason
+                            })
+                        }
 
                         if (this.isAgent) {
                             data.List.forEach(v => {

@@ -182,11 +182,13 @@ export const postUser = data => fetch('/user', data, 'POST')
 
 export const getUserById = id => fetch('/user/detail/' + id)
 
+export const getAdminUser = id => fetch('/user/find/' + id)
+
 export const getUserByName = id => fetch('/user/id/' + id)
 
 export const getUsers = (facid, data) => fetch('/user/' + facid, data)
 
-export const updateUser = (id, data) => fetch('/user/' + id, data)
+export const updateUser = (id, data) => fetch('/user/' + id, data, 'PUT')
 
 export const deleteUser = id => fetch('/user/' + id, null, 'DELETE')
 
@@ -254,7 +256,7 @@ export const deleteRole = roleid => fetch('/role/' + roleid, null, 'DELETE')
 
 export const updateRole = (roleid, data) => fetch('/role/' + roleid, data, 'PUT')
 
-export const getFactoryUsers = facid => fetch('/user/' + facid)
+export const getFactoryUsers = (facid, data) => fetch('/user/' + facid, data)
 
 export const updateUserRole = (uid, roleid) => fetch('/user/role/' + uid, {role: roleid}, 'PATCH')
 
@@ -305,3 +307,5 @@ export const diaSearchByVaccine = data => fetch('/searchfile/searchByVaccine', d
 export const diaSearchBySymptom = data => fetch('/searchfile/searchBySymptom', data, 'POST')
 
 export const diaSearchByUploader = data => fetch('/searchfile/searchByUploader', data, 'POST')
+
+export const deleteDiagnose = id => fetch('/pic/delete/' + id, null, 'DELETE')
