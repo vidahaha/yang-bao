@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="admin-list-pass" v-if="!hideFilter && !releaseType ">
-            <el-select @change="fetchData()" width="120" v-if="!hidePass" size="small" v-model="isPass" placeholder="所有数据">
+            <el-select @change="fetchData()" width="120" v-if="!hidePass&&!searchAddress" size="small" v-model="isPass" placeholder="所有数据">
                 <el-option
                     v-for="(val, key) in options"
                     :key="val"
@@ -9,6 +9,7 @@
                     :value="val">
                 </el-option>
             </el-select>
+            <area-cascader type='text' v-if="!hidePass&&searchAddress" :level='1' v-model="address" :data="pcaa"></area-cascader>
             <el-input class="pick-erpai" size="small" v-model="factoryName">
                 <template slot="prepend">养殖场:</template>
             </el-input>
@@ -141,6 +142,7 @@
 
 <script>
 import XLSX from 'xlsx'
+import pcaa from 'area-data/pcaa'
 import { isReqSuccessful } from '@/util/jskit'
 import { getUserById, getReleaseByName } from '@/util/getdata'
 import {
@@ -248,6 +250,12 @@ export default {
         hasUnpass: {
             type: Boolean,
             default: true
+        },
+
+        //使用地点搜索
+        searchAddress: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -282,6 +290,7 @@ export default {
             tableData: [], // 表格数据
 
             isPass: null, // 筛选条件-是否通过
+            address: null, // 筛选条件-地址            
             factoryName: null, // 筛选条件-工厂名称
             options: { // 表格审核状态列，显示转换映射
                 所有数据: null,
@@ -291,7 +300,8 @@ export default {
             },
 
             eartag: null,
-            gmtCreate: null
+            gmtCreate: null,
+            pcaa
         }
     },
 
@@ -615,6 +625,10 @@ export default {
 
 <style lang="stylus">
 @import '~@/assets/css/color'
+.admin-list-pass
+    .area-cascader-wrap
+        vertical-align: middle;
+        display: inline-block;
 .el-table th
     border-left 2px solid #98c9e6
     color #fff

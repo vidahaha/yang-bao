@@ -83,7 +83,7 @@ export const checkForm = (form, checkFull) => {
 
     let checkTrade = (data) => {
         return data.every(val => {
-            if (val.model !== undefined && !/^[G|M]\d{6}$/.test(val.model)) {
+            if (val.model && !/^[G|M]\d{6}$/.test(val.model)) {
                 app.$message.warning(val.name + '必须是G或M加上6位数字')
                 return false
             } else {
@@ -125,14 +125,14 @@ export const checkForm = (form, checkFull) => {
 
     let immuneEartag = form.immuneEartag
 
-    if (immuneEartag !== undefined && !/^\d{15}$/.test(immuneEartag)) {
+    if (immuneEartag && !/^\d{15}$/.test(immuneEartag)) {
         app.$message.warning('免疫耳牌必须是15位数字')
         return false
     }
 
     let weight = form.birthWeight
     if (weight && !/^\d+\.?\d{0,}$/.test(weight)) {
-        app.$message.warning('初登体重只能输入数字')
+        app.$message.warning('初生体重只能输入数字')
         return false
     }
 
@@ -143,6 +143,7 @@ export const checkForm = (form, checkFull) => {
         return false
     }
     if (checkFull && Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark' && v !== 'nativeEartag')) {
+        console.log(form)
         app.$message.warning('请完善表单信息')
         return false
     }

@@ -61,13 +61,20 @@ export const getStages = (q, cb) => {
     cb(stages)
 }
 
+export const getConFeedA = (q, cb) => {
+    let conFeed = [
+        {value: '预混料'},
+        {value: '浓缩料'}
+    ]
+    cb(conFeed)
+}
+
 export const getConFeed = (q, cb) => {
     let conFeed = [
         {value: '玉米'},
         {value: '豆粕'},
         {value: '麸皮'},
-        {value: '食盐'},
-        {value: '预混料'}
+        {value: '全价料'}
     ]
     cb(conFeed)
 }

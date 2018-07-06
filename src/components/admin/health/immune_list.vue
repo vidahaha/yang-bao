@@ -27,8 +27,8 @@ export default {
             deleteImmune,
             headers: [
                 {prop: 'factoryName', label: '养殖场'},
-                {prop: 'crowdNum', label: '接种羊(群)', width: '180'},
-                {prop: 'eartagFile', label: '免疫耳牌附件号'},
+                {prop: 'crowdNum', label: '接种栏/栋', width: '180'},
+                {prop: 'eartagFile', label: '免疫耳牌号'},
                 {prop: 'immuneTime', label: '接种时间', width: '180'},
                 {prop: 'immuneKind', label: '疫苗种类'},
                 {prop: 'immuneWay', label: '接种方法'},

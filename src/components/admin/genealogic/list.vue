@@ -7,7 +7,8 @@
             :getData="getGeneas"
             :deleteData="deleteGeneaRec"
             :isGenea="true"
-            :headers="headers">
+            :headers="headers"
+            :searchAddress="true">
         </admin-table>
     </div>
 </template>

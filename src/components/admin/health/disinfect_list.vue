@@ -27,7 +27,8 @@ export default {
             deleteDisinfect,
             headers: [
                 {prop: 'disinfectTime', label: '日期', width: 200},
-                {prop: 'place', label: '消毒场所'},
+                {prop: 'eartagFile', label: '商标耳牌号'},
+                {prop: 'place', label: '消毒栏/栋'},
                 {prop: 'disinfectName', label: '消毒药名称'},
                 {prop: 'dose', label: '用药剂量'},
                 {prop: 'disinfectWay', label: '消毒方法'},

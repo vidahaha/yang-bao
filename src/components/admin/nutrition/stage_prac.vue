@@ -49,7 +49,7 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { isReqSuccessful, checkForm, postJump, patchJump } from '@/util/jskit'
-import { getStages, getDryFeed, getConFeed } from '@/util/dataselect'
+import { getStages, getDryFeed, getConFeed, getConFeedA } from '@/util/dataselect'
 import { postStage, getStage, updateStage, getUserById } from '@/util/getdata'
 
 export default {
@@ -61,6 +61,7 @@ export default {
         return {
             items: [
                 {label: '栏/栋', model: 'building'},
+                {label: '商标耳牌号', model: 'eartagFile'},
                 {label: '使用日期(序号)', model: 'nutritionT', type: 'time'},
                 {label: '羊数', model: 'quantity', type: 'number', mr: true},
                 {label: '羊只均重/斤',model: 'average',type: 'number'},
@@ -98,8 +99,8 @@ export default {
                 // 原材料，%
                 // 临时添加，%
                 {title: '精料配方(%)', items: [
-                    {label: '添加剂', model: 'materialA', inputs: ['']},
-                    {label: '精料', model: 'materialM', inputs: [''], type: 'select', fetchSuggestions: getConFeed},
+                    {label: '预混料', model: 'materialA', inputs: [''], type: 'select', fetchSuggestions: getConFeedA},
+                    {label: '原料', model: 'materialM', inputs: [''], type: 'select', fetchSuggestions: getConFeed},
                     {label: '其他', model: 'materialO', inputs: ['']}
                 ]},
                 {title: '精料用量(体重%)', items: [
@@ -115,6 +116,9 @@ export default {
                     {label: '青料', model: 'roughageWP', inputs: ['']},
                     {label: '干料', model: 'roughageWD', type: 'select', fetchSuggestions: getDryFeed, inputs: ['']},
                     {label: '其他', model: 'roughageWO', inputs: ['']}
+                ]},
+                {title: '全日量用量(体重%)', items: [
+                    {label: '全日量用量(体重%)', model: 'dayM', inputs: ['']},
                 ]},
                 {title: '领料总量', items: [
                     {label: '精料', model: 'pickingM', inputs: [''], placeholder: '名称和单位（斤 / 公斤）'},

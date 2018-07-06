@@ -25,8 +25,8 @@ export default {
             getAllAntiscolic,
             deleteAntiscolic,
             headers: [
-                {prop: 'crowdNum', label: '驱虫羊(群)'},
-                {prop: 'eartagFile', label: '耳牌附件号'},
+                {prop: 'crowdNum', label: '驱虫栏/栋'},
+                {prop: 'eartagFile', label: '商标耳牌号'},
                 {prop: 'repellentTime', label: '驱虫时间', width: 200},
                 {prop: 'repellentName', label: '药物名称', width: 160},
                 {prop: 'repellentWay', label: '给药途径', width: '160'},

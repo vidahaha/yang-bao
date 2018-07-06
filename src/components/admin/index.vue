@@ -1,6 +1,6 @@
 <template>
     <div class="app-home">
-        <admin-head :username="user.pkUserid" :department="user.factoryName" :name="user.userRealname" :rolename="user.roleName"></admin-head>
+        <admin-head :username="user.pkUserid" :department="user.factoryName" :name="user.userRealname" :rolename="user.roleName" :nums="1"></admin-head>
         <el-container class="container bg-blue">
             <el-aside :width="side_width" class="main-aside">
                 <el-tree node-key="to" :default-expanded-keys="expanded_key" :data="treedata" :indent="30" accordion @node-click="clickTree"></el-tree>
@@ -103,6 +103,12 @@ export default {
                 children: [
                     {label: '专家课堂', to: 'course'},
                     {label: '系谱档案', to: 'genealogic'},
+                    {label: '存栏档案', to: 'livestock', children: [
+                        {label: '栏栋管理', to: 'livestock'},
+                        {label: '羊只管理', to: 'livestocklist'},
+                        {label: '已销售羊只', to: 'sale'},
+                        {label: '已死亡羊只', to: 'dead'},
+                    ]},
                     {label: '卫生·疫控', to: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},

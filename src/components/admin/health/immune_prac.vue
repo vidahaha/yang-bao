@@ -26,8 +26,8 @@ export default {
         return {
             getImmune,
             items: [
-                {label: '接种羊(群)', model: 'crowdNum'},
-                {label: '免疫耳牌附件号', model: 'eartagFile', type: 'file'},
+                {label: '接种栏/栋', model: 'crowdNum'},
+                {label: '免疫耳牌号', model: 'eartagFile'},
                 {label: '接种时间', model: 'immuneTime', type: 'time',mr: 1},
                 {label: '疫苗种类', model: 'immuneKind', type: 'select', fetchSuggestions: getImmuneTypes},
                 {label: '接种方法', model: 'immuneWay', type: 'select', fetchSuggestions: getInfectWays},

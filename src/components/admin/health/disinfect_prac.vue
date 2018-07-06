@@ -27,8 +27,8 @@ export default {
             getDisinfect,
             items: [
                 {label: '日期', model: 'disinfectTime', type: 'time'},
-                {label: '免疫耳牌附件号', model: 'eartagFile', type: 'file'},
-                {label: '消毒场所', model: 'place', mr: true},
+                {label: '商标耳牌号', model: 'eartagFile'},
+                {label: '消毒栏/栋', model: 'place', mr: true},
                 {label: '消毒药名称', model: 'disinfectName'},
                 {label: '用药剂量', model: 'dose', placeholder: '请注明单位'},
             ],

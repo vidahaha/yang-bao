@@ -27,13 +27,14 @@
         deleteStage,
         headers: [
           { label: '栏/栋', prop: 'building' },
+          {label: '商标耳牌号', prop: 'eartagFile'},
           { label: '使用日期', prop: 'nutritionT', width: 200 },
           { label: '羊数', prop: 'quantity' },
           { label: '羊只均重/斤', prop: 'average' },
           { label: '阶段', prop: 'period' },
           { label: '精料配方(%)', children: [
             { label: '预混料', prop: 'materialA'},
-            { label: '精料', prop: 'materialM'},
+            { label: '原料', prop: 'materialM'},
             { label: '其他', prop: 'materialO'}
           ]},
           { label: '精料用量(体重%)', children: [
@@ -50,6 +51,7 @@
             { label: '干料', prop: 'roughageWD'},
             { label: '其他', prop: 'roughageWO' }
           ]},
+          { label: '全日量用量(体重%)', prop: 'dayM'},
           { label: '领料总量', children: [
             { label: '精料', prop: 'pickingM'},
             { label: '粗饲料', prop: 'pickingR'},

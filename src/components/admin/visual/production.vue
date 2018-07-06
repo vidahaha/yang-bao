@@ -151,6 +151,7 @@ export default {
                         let arr = []
                         res.data.List.forEach((item) => {
                             item.url = `${baseUrl}/pic/${item.filename}`
+                            if (isImg !== 2) item.filetype = isImg 
                         })
                         //     arr.push({
                         //         symptom: item.symptom,

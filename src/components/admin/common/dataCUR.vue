@@ -196,12 +196,17 @@ export default {
 
             let data = Object.assign({}, this.models)
 
-            if ( data.prenatalImmunityType !== undefined ) {
+            if ( data.prenatalImmunityType ) {
                 data.prenatalImmunityType = ArrayToString(data.prenatalImmunityType);
             }
-            if ( data.prenatalImmunityTime !== undefined ) {
+            if ( data.prenatalImmunityTime ) {
                 data.prenatalImmunityTime = ArrayToString(data.prenatalImmunityTime);
             }
+
+            if (  data.breedLocation && data.breedingSheepBase  )  {
+                data.breedingSheepBase  =  data.breedLocation.join('') + data.breedingSheepBase
+                delete data.breedLocation
+            }  
 
             let { userFactory, userRealname, id, factoryName } = this.user
             data.factoryNum = this.models.factoryNum || userFactory
@@ -217,7 +222,7 @@ export default {
                         this.$message.warning('请选择羊场地理位置')
                         return
                     } else {
-                        data.breedLocation = area.join('')
+                        data.breedLocation = area.join('')         
                     }
                 }
                 data.responsibleId = -1

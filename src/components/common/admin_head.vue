@@ -19,10 +19,11 @@
 
             <div class="tab-right">
                 <div class="u-info">
-                    <span>用户：{{username}}</span>
-                    <span>部门：{{department}}</span>
+                    <!-- <span>用户：{{username}}</span> -->
                     <span>姓名：{{name}}</span>
+                    <span>部门：{{department}}</span>
                     <span>角色：{{rolename}}</span>
+                    <span>您有{{nums}}条记录待审核</span>                    
                 </div>
                 <!-- <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span> -->
                 <!-- <span><i class="iconfont icon-user yellow"></i>通讯录</span> -->
@@ -49,6 +50,9 @@ export default {
         },
         rolename: {
             type: String
+        },
+        nums: {
+            type: Number
         }
     },
 
@@ -125,6 +129,7 @@ export default {
 .admin-tabs,
 .tab-right
     display inline-block
+    margin-left 70px
     span
         cursor pointer
 .admin-tabs
@@ -156,5 +161,4 @@ export default {
                 color #bdbd34
     .u-info
         display inline-block
-        max-width 650px
 </style>

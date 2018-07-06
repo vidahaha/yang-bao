@@ -43,6 +43,11 @@ const ImmuneList = () => import('@/components/admin/health/immune_list')
 const AntiscolicPlan = () => import('@/components/admin/health/antiscolic_plan')
 const AntiscolicPrac = () => import('@/components/admin/health/antiscolic_prac')
 const AntiscolicList = () => import('@/components/admin/health/antiscolic_list')
+
+// 存栏档案
+const LivestockPrac = () => import('@/components/admin/livestock/index')
+const LivestockList = () => import('@/components/admin/livestock/list')
+
 // 营养生产
 const StagePlan = () => import('@/components/admin/nutrition/stage_plan')
 const StagePrac = () => import('@/components/admin/nutrition/stage_prac')
@@ -137,6 +142,9 @@ export default new Router({
             {path: 'authrole', name: 'authrole', component: AuthRole},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
+            // 存栏档案
+            {path: 'livestock/prac', name: 'livestock', component: LivestockPrac},
+            {path: 'livestock/list', name: 'livestockList', component: LivestockList},
             // 卫生疫控
             {path: 'health/disinfect/prac', name: 'disinfectprac', component: DisinfectPrac},
             {path: 'health/disinfect/list', name: 'disinfectlist', component: DisinfectList},
