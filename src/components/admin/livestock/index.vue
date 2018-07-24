@@ -1,16 +1,20 @@
 <template>
     <div class="livestock-index">
-		<p>新建栏栋</p>
+		<p class="info-p">新建栏栋</p>
 		<div class="input-group">
 			<el-input size="small" type="text" class="input" v-model="column">
 				<template slot="prepend">栋号:</template>
 			</el-input>
 			<el-input size="small" type="text" class="input" v-model="columnNum">
-				<template slot="prepend">栏数:</template>
+				<template slot="prepend">本栋栏数:</template>
 			</el-input>
 			<el-button type="small" @click="addColumn()">新建</el-button>
 			<el-button type="small">编辑</el-button>
+			<p style="margin-left: 450px">
+				(编辑时栋号不变，栏数只能增加不能减少)
+			</p>
 		</div>
+		<p class="info-p">本厂羊只总数：{{allNum}}</p>
         <el-table :data="tableData" :span-method="objectSpanMethod" :border="true">
 			<el-table-column
 				label="栋号"
@@ -100,6 +104,13 @@ export default {
 			},
 			column: 0,
 			columnNum: 0,
+			allNum: 100,
+			selectD: 1,
+			selectL: 1, //单个分配
+			tradeMarkEartag: '',
+			immuneEartag: '', //批量分配
+			checkList:[],
+			crowdTag:['G123456','G123415','G1232465','G1233456','G142345','G1523465'],
             items: [
                 {label: '性别', model: 'sex', type: 'radio'},
                 {label: '商标耳牌', model: 'tradeMarkEartag', trade: true, block: 1},
@@ -162,6 +173,15 @@ export default {
 		
 	},
 
+	computed: {
+		selectTag() {
+			let res = ''
+			this.checkList.forEach( ele => {
+				res += ele + ';'
+			})
+			return res 
+		}
+	},
 
 	methods: {
 		objectSpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -213,9 +233,13 @@ export default {
 	.el-input
 		width 270px	!important 
 		vertical-align middle
-		margin-left: 35px
+		margin-left 35px
 	.el-button
-		margin-left: 10px
+		margin-left 10px
 	.el-table	
-		margin-left 50px
+		margin-left 30px
+		width 481px
+		display inline-block
+	.info-p
+		margin-left 30px
 </style>

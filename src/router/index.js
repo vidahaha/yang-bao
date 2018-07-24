@@ -47,6 +47,9 @@ const AntiscolicList = () => import('@/components/admin/health/antiscolic_list')
 // 存栏档案
 const LivestockPrac = () => import('@/components/admin/livestock/index')
 const LivestockList = () => import('@/components/admin/livestock/list')
+const LivestockSale = () => import('@/components/admin/livestock/sale')
+const LivestockDead = () => import('@/components/admin/livestock/dead')
+const LivestockAdd = () => import('@/components/admin/livestock/add')
 
 // 营养生产
 const StagePlan = () => import('@/components/admin/nutrition/stage_plan')
@@ -145,6 +148,9 @@ export default new Router({
             // 存栏档案
             {path: 'livestock/prac', name: 'livestock', component: LivestockPrac},
             {path: 'livestock/list', name: 'livestockList', component: LivestockList},
+            {path: 'livestock/sale', name: 'livestockSale', component: LivestockSale},
+            {path: 'livestock/dead', name: 'livestockDead', component: LivestockDead},
+            {path: 'livestock/add', name: 'livestockAdd', component: LivestockAdd},
             // 卫生疫控
             {path: 'health/disinfect/prac', name: 'disinfectprac', component: DisinfectPrac},
             {path: 'health/disinfect/list', name: 'disinfectlist', component: DisinfectList},

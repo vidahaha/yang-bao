@@ -63,6 +63,15 @@
                     </el-autocomplete>
                 </div>
 
+                <div :class="{mr: item.mr, block: item.block}" :key="i" v-else-if="item.type === 'selectCrowd'" class="time el-input-group select">
+                    <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
+                    <el-popover placement="bottom" width="200" trigger="hover">
+                        <el-checkbox-group v-model="checkList">
+                            <el-checkbox v-for="(d, index) in crowdD" :label="d" :key="index" @change="getls(d)">{{d}}栋</el-checkbox>
+                        </el-checkbox-group>
+                        <el-input slot="reference" style="width: 152px" v-model="selectD" placeholder="请选择" ></el-input>
+                    </el-popover>
+                </div>
         
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'radio'" class="time el-input-group radio">
@@ -140,6 +149,43 @@ export default {
             pcaa,
             options: [],
             count: 0, // 增加次数
+            selectD: '', // 上传栏栋
+            checkList: [],
+            crowd: [
+                {
+                    ds: 1,
+                    ls: [
+                        ['G123456','G12345','G12345'],
+                        ['G123456','G123465','G12345'],
+                        ['G123456','G12345','G123465'],
+                        ['G123456','G12345','G123465'],
+                        ['G123456','G12345','G123465'],
+                    ]
+                },
+                {
+                    ds: 2,
+                    ls: [
+                        ['G123458','G12345','G12345'],
+                        ['G12345','G123485','G12345'],
+                        ['G12345','G12345','G123485'],
+                        ['G123456','G12345','G123465'],
+                    ]
+                },
+                {
+                    ds: 3,
+                    ls: [
+                        ['G123495','G12345','G12345'],
+                        ['G12345','G123495','G12345'],
+                        ['G12345','G12345','G123495'],
+                    ]
+                }
+            ]
+        }
+    },
+
+    computed: {
+        crowdD() {
+            return this.crowd.map( ele => ele.ds )
         }
     },
 
@@ -165,6 +211,18 @@ export default {
     },
 
     methods: {
+        getls (d) {
+            let len = 0
+            this.crowd.forEach( ele => {
+                if ( ele.ds === d ) len = ele.ls.length
+            })
+            let res = []
+            for ( let i = 1; i <= len; i++ ) {
+                res.push(i)
+            }
+            console.log( res )
+            return res 
+        },
         selectFile (item) {
             let file = this.$refs.erpai[0].files[0]
             this.models[item.model] = file

@@ -78,7 +78,10 @@
                 </el-col>
             </el-row>
         </footer>
-        <p class="footer-bottom">Copyright &copy; 2018.贵州省东骏有机农业科技有限公司(Guizhou Dongjun Organic Agriculture Technology Co., Ltd.) 版权所有</p>
+        <p class="footer-bottom">
+            Copyright &copy; 2018.贵州省东骏有机农业科技有限公司(Guizhou Dongjun Organic Agriculture Technology Co., Ltd.) 版权所有 <br/>
+            软件著作编号: 2018SR504492; 2018SR503550; 2018SR503571; 2018SR503580; 2018SR503575; 2018SR503564;2018SR504500; 
+        </p>
     </div>
 </template>
 

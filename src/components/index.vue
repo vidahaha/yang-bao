@@ -30,7 +30,8 @@
                         <span v-text="item.text"></span>
                     </router-link>
                 </div>
-                <img src="../assets/imgs/index/jianguan.png" width="16%">
+                <router-link class="link-logo" to="/genea"></router-link>
+                <!-- <img src="" width="16%"> -->
             </div>
         </section>
 
@@ -155,4 +156,9 @@ img
     margin-bottom 10px
     overflow hidden
     text-align center
+.link-logo
+    background url('../assets/imgs/index/jianguan.png')
+    width 167px
+    height 164px
+    background-size cover
 </style>

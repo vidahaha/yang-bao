@@ -105,9 +105,10 @@ export default {
                     {label: '系谱档案', to: 'genealogic'},
                     {label: '存栏档案', to: 'livestock', children: [
                         {label: '栏栋管理', to: 'livestock'},
-                        {label: '羊只管理', to: 'livestocklist'},
-                        {label: '已销售羊只', to: 'sale'},
-                        {label: '已死亡羊只', to: 'dead'},
+                        {label: '新增羊只', to: 'livestockAdd'},
+                        {label: '羊只管理', to: 'livestockList'},
+                        {label: '已销售羊只', to: 'livestockSale'},
+                        {label: '已死亡羊只', to: 'livestockDead'},
                     ]},
                     {label: '卫生·疫控', to: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
