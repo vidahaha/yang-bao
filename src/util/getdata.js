@@ -44,6 +44,13 @@ export const queryGenea = data => fetch('/gf/findshow', data, 'POST')
 export const getGeneas = (id, data) => fetch(`/gf/${id}`, data)
 
 /**
+ * 存栏档案CURD
+ */
+
+ // 获取羊的耳牌
+// export const getEarTag = id => fetch('/gf/types')
+
+/**
  * 权限CURD
  */
 export const getPermission = _ => fetch('/user')

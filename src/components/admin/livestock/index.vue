@@ -15,7 +15,7 @@
 			</p>
 		</div>
 		<p class="info-p">本厂羊只总数：{{allNum}}</p>
-        <el-table :data="tableData" :span-method="objectSpanMethod" :border="true">
+        <el-table :data="tableData" :span-method="objectSpanMethod" :border="true" height="450" ref="table">
 			<el-table-column
 				label="栋号"
 				width="120"
@@ -33,6 +33,9 @@
 				width="120"
 				prop="lnum"
 			>
+				<template slot-scope="scope">
+					<input v-model="scope.row.lnum" style="text-align: center;width: 60%;margin: 0 auto;display: block;"/>
+				</template>
 			</el-table-column>
 			<el-table-column
 				label="本栋羊数"
@@ -68,7 +71,10 @@ export default {
 				 count[ele.d] ++ 	
 			} 
 		});
-		this.dnum = sum     
+		this.dnum = sum;
+		this.allNum = sum.reduce( (a, b) => {
+			return a + b;
+		})     
 		count.forEach((ele, index) => {
 			this.merge.len.set(index, ele) 
 		})               
@@ -77,16 +83,26 @@ export default {
 	watch: {
 		tableData: {
 			handler(o, n) {
+				console.log(n)
 				let count = []
+				let sum = []		
 				n.forEach(ele => {
 					if (ele.d) {
-						if(count[ele.d] === undefined) {
+						if(sum[ele.d] === undefined) {
+							sum[ele.d] = 0
 							count[ele.d] = 0
-						}	
-						count[ele.d] += parseInt(ele.lnum)	
-					} 		
+						}		
+						sum[ele.d] += parseInt(ele.lnum)	
+						count[ele.d] ++ 	
+					} 
 				});
-				this.dnum = count
+				this.dnum = sum;
+				this.allNum = sum.reduce( (a, b) => {
+					return a + b;
+				})  
+				count.forEach((ele, index) => {
+					this.merge.len.set(index, ele) 
+				}) 
 			},
 			deep: true		
 		},
@@ -186,7 +202,7 @@ export default {
 	methods: {
 		objectSpanMethod({ row, column, rowIndex, columnIndex }) {
 			let d = row.d;
-			let len = this.merge.len.get(d)
+			let len = this.merge.len.get(parseInt(d));
 			let flag = 0 
 			for (let index of this.merge.len.keys()) {
 				if ( index <= d - 1 ) {
@@ -195,6 +211,7 @@ export default {
 			}
 			if (columnIndex === 3) {
 				if (rowIndex === flag) {
+					console.log( len )
 					return {
 						rowspan: len,
 						colspan: 1
@@ -211,15 +228,16 @@ export default {
 
 		addColumn() {
 			let c = this.column
+			if ( c <= 0 ) return;
 			let n = this.columnNum
-			let flag = -1
-			this.tableData.forEach( (ele,index) => {
-				if ( flag === -1 ) flag = index
-				console.log( ele.d +'--'+c)
-				if (ele.d == c) this.tableData.splice(index, 1)
-			})
-			for ( let i = 1; i <= n; i++ ) {
-				this.tableData.splice(flag, 0, {d:c, l:i})
+			let len = this.merge.len.get(parseInt(c)) || 0;
+			if ( len && n <= len ) return;
+			let flag = 0
+			for ( let f = 1; f <= c; f++ ) {
+				flag += this.merge.len.get(parseInt(f)) || 0;
+			}
+			for ( let i = n; i > len; i-- ) {
+				this.tableData.splice(flag, 0, {d:c, l:i, lnum: 1})
 			}
 		}
 	}

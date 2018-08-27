@@ -13,9 +13,21 @@
 			</div>
 			<div class="single">
 				<span>单个分配:</span>
-				<el-input size="small" type="text" class="input" v-model="tradeMarkEartag">
-					<template slot="prepend">商标耳牌号:</template>
-				</el-input>
+				<el-popover placement="right" width="auto" trigger="click" popper-class="trade-select" @show="initPopover" ref="tradeSelect">
+					<el-checkbox-group v-model="tradeDList" class="trade-d">
+						<el-tag>栋号</el-tag>
+						<el-checkbox v-for="(d, index) in tableDataFormat.d" :label="d" :key="index">{{d}}</el-checkbox>
+					</el-checkbox-group>
+					<el-checkbox-group v-model="tradeLList" class="trade-l" v-if="tradeDList.length > 0">
+						<el-tag>栏号</el-tag>
+						<el-checkbox v-for="(l, index) in tableDataFormat.l" :label="l" :key="index">{{l}}</el-checkbox>
+					</el-checkbox-group>
+					<el-checkbox-group v-model="tradeNList" class="trade-n" v-if="tradeLList.length > 0">
+						<el-tag>耳牌号</el-tag>
+						<el-checkbox v-for="(n, index) in tableDataFormat.lnum" :label="n" :key="index">{{n}}</el-checkbox>
+					</el-checkbox-group>
+					<el-input size="small" slot="reference" style="width: 152px" v-model="tradeMarkEartag" placeholder="请选择" ><template slot="prepend">商标耳牌号:</template></el-input>
+				</el-popover>
 				<el-input size="small" type="text" class="input" v-model="immuneEartag" >
 					<template slot="prepend">免疫耳牌号:</template>
 				</el-input>
@@ -23,7 +35,7 @@
 			</div>
 			<div class="multiple">
 				<span>批量分配:</span>
-				<el-popover placement="bottom" width="200" trigger="hover" popper-class="multiple-select">
+				<el-popover placement="bottom" width="200" trigger="click" popper-class="multiple-select">
 					<el-checkbox-group v-model="checkList">
 						<el-checkbox v-for="(t, index) in crowdTag" :label="t" :key="index">{{t}}</el-checkbox>
 					</el-checkbox-group>
@@ -63,12 +75,18 @@
 	</div>
 </template>
 <script>
+
+// import { getEarTag } from '@/util/getdata'
+
 export default {
 	data() {
 		return {
-			tradeMarkEartag: '',
 			immuneEartag: '',
 			checkList: [],
+			tradeDList: [], // 当前已选择栋号
+			tradeLList: [],	// 当前已选择栏号
+			tradeNList: [],	// 当前已选择耳牌
+			tradeAList: [], // 所有已选择
 			crowdTag:['G123456','G123415','G1232465','G1233456','G142345','G1523465'],
 			dnum: [],
 			merge: {  // 合并单元格需要的数据
@@ -80,6 +98,11 @@ export default {
 			allNum: 100,
 			selectD: 1,
 			selectL: 1, //单个分配
+			tableDataFormat: {
+				d: ['1', '2', '3'],
+				l: ['1', '2', '3', '4'],
+				lnum: ['G123456','G123415','G1232465'],
+			},
 			tableData: [{
 				d: 1,
 				l: 1,
@@ -145,24 +168,51 @@ export default {
 				}
 			}
 		},
+
+		initPopover() {
+			let p = this.$refs.tradeSelect.$refs.popper
+			setTimeout(()=> {
+				p.style.top = '347px'
+				p.style.left = '598px'
+			}, 0);
+		}
 	},
 
 	watch: {
 		tableData: {
 			handler(o, n) {
 				let count = []
+				let sum = []		
 				n.forEach(ele => {
 					if (ele.d) {
-						if(count[ele.d] === undefined) {
+						if(sum[ele.d] === undefined) {
+							sum[ele.d] = 0
 							count[ele.d] = 0
-						}	
-						count[ele.d] += parseInt(ele.lnum)	
-					} 		
+						}		
+						sum[ele.d] += parseInt(ele.lnum)	
+						count[ele.d] ++ 	
+					} 
 				});
-				this.dnum = count
+				this.dnum = sum     
+				count.forEach((ele, index) => {
+					this.merge.len.set(index, ele) 
+				}) 
 			},
 			deep: true		
 		},
+		tradeLList(o) {
+			// 模拟数据 
+			if (o[ o.length - 1] == 1) {
+				this.tableDataFormat.lnum = ['G123456','G123415','G1232465']
+			} else if (o[ o.length - 1] == 2) {
+				this.tableDataFormat.lnum = ['G1','G2','G3']
+			} else {
+				this.tableDataFormat.lnum = ['G4','G5','G6']
+			}
+
+			let currentL = o[ o.length - 1]
+			// getdata( currentL)
+		}
 	},
 
 	computed: {
@@ -172,7 +222,14 @@ export default {
 				res += ele + ';'
 			})
 			return res 
-		}
+		},
+		tradeMarkEartag() {
+			let res = ''
+			this.tradeNList.forEach( ele => {
+				res += ele + ';'
+			})
+			return res 
+		},
 	},
 
 	mounted() {
@@ -238,4 +295,18 @@ export default {
 	.el-checkbox
 		margin-left 0px !important
 		width 50% !important
+.trade-select
+	display flex
+	top 347px
+	left 597px
+	.el-checkbox-group
+		display flex
+		flex-wrap wrap
+		flex-direction column
+		margin 0 20px
+	.el-checkbox
+		margin 2px auto !important
+		text-align: center;
+	.el-tag
+		margin-bottom: 5px;	
 </style>
